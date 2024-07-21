@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Basic auth server built with ExpressJS",
   "scripts": {
-    "dev": "export NODE_ENV=development && nodemon src/index.js",
+    "dev": "nodemon --quiet src/index.js",
     "start": "node src/index.js"
   },
   "keywords": [
