@@ -1,0 +1,12 @@
+# Ignore macOS Finder files
+.DS_Store
+
+# Ignore node modules (you should already have this line in your .gitignore)
+node_modules/
+
+# Ignore build artifacts
+dist/
+build/
+
+# Ignore temporary files
+temp/
