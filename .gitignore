@@ -10,3 +10,11 @@ build/
 
 # Ignore temporary files
 temp/
+
+# All secrets
+.env
+
+# ignore the config file
+.continueignore
+
+# End of file
