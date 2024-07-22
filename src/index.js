@@ -24,8 +24,14 @@ async function startServer() {
       (certificates.ca, certificates.cert),
       app
     );
+    const protocol =
+      httpsServer instanceof require("https").Server ? "https" : "http";
     httpsServer.listen(port, host, () => {
-      console.log(`HTTPS Server is running on https://${host}:${port}`);
+      const secureServerAddress = httpsServer.address().address;
+      const secureServerPort = httpsServer.address().port;
+      console.log(
+        `⚡️Server is running on ${protocol}://${secureServerAddress}:${secureServerPort} ⚡️`
+      );
     });
   } catch (error) {
     console.error("Couldn't start server");
