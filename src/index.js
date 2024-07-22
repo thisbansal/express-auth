@@ -1,19 +1,36 @@
-// Create a new express app
+const { getCreds } = require("./config");
+const https = require("https");
+const helmet = require("helmet");
 const express = require("express");
-const app = express();
-const { port, host } = require("./config");
 
-// Middleware to parse JSON bodies (for incoming requests)
-app.use(express.json());
+async function startServer() {
+  try {
+    const app = express();
+    const { port, host, isHttpsEnabled, certificates } = await getCreds();
 
-// Use the logger middleware
-app.use(require("./middleware/index"));
+    // Middleware
+    if (isHttpsEnabled) {
+      app.use(helmet());
+    }
+    app.use(express.json());
+    app.use(require("./middleware/index"));
 
-// Import and use routes
-const userRoutes = require("./routes/index");
-app.use("/", userRoutes);
+    // routes
+    const userRoutes = require("./routes/index");
+    app.use("/", userRoutes);
 
-// Start the server
-app.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`);
-});
+    // Start the server
+    const httpsServer = https.createServer(
+      (certificates.ca, certificates.cert),
+      app
+    );
+    httpsServer.listen(port, host, () => {
+      console.log(`HTTPS Server is running on https://${host}:${port}`);
+    });
+  } catch (error) {
+    console.error("Couldn't start server");
+    console.debug(error);
+  }
+}
+
+startServer();

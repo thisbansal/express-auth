@@ -5,7 +5,7 @@ const router = new Router();
 
 router.get("/testing", (req, res) => {
   try {
-    res.status(200).json({ status: "success" }).send();
+    res.send("testing route working!");
   } catch (error) {
     console.log("Error in testing route", error);
   }
