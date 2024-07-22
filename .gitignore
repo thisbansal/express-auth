@@ -17,4 +17,8 @@ temp/
 # ignore the config file
 .continueignore
 
+#CAs
+CA/
+*.pem
+
 # End of file
