@@ -2,12 +2,14 @@ const { getCreds } = require("./config");
 const https = require("https");
 const helmet = require("helmet");
 const express = require("express");
+const dB = require('./config/db');
+// const dotenv = require("dotenv").config();
 
 async function startServer() {
   try {
     const app = express();
     const { port, host, isHttpsEnabled, certificates } = await getCreds();
-
+    
     // Middleware
     if (isHttpsEnabled) {
       app.use(helmet());
@@ -24,8 +26,14 @@ async function startServer() {
       (certificates.ca, certificates.cert),
       app
     );
+    const protocol =
+      httpsServer instanceof require("https").Server ? "https" : "http";
     httpsServer.listen(port, host, () => {
-      console.log(`HTTPS Server is running on https://${host}:${port}`);
+      const secureServerAddress = httpsServer.address().address;
+      const secureServerPort = httpsServer.address().port;
+      console.log(
+        `⚡️Server is running on ${protocol}://${secureServerAddress}:${secureServerPort} ⚡️`
+      );
     });
   } catch (error) {
     console.error("Couldn't start server");
