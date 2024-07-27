@@ -2,12 +2,14 @@ const { getCreds } = require("./config");
 const https = require("https");
 const helmet = require("helmet");
 const express = require("express");
+const dB = require('./config/db');
+// const dotenv = require("dotenv").config();
 
 async function startServer() {
   try {
     const app = express();
     const { port, host, isHttpsEnabled, certificates } = await getCreds();
-
+    
     // Middleware
     if (isHttpsEnabled) {
       app.use(helmet());
