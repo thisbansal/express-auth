@@ -15,16 +15,17 @@ class Db {
 
   async connect() {
     try {
-        const pool = new Pool({
-          user: userName,
-          host: host,
-          database: databaseName,
-          password: userPassword,
-          port:port
+      const pool = new Pool({
+        user: userName,
+        host: host,
+        database: databaseName,
+        password: userPassword,
+        port: port,
       });
       await pool.connect();
       this.connection = pool;
     } catch (err) {
+      console.error("Couldn't connec to t database");
       throw err;
     }
   }

@@ -2,7 +2,7 @@
 .DS_Store
 
 # Ignore node modules (you should already have this line in your .gitignore)
-node_modules/
+node_modules/**
 
 # Ignore build artifacts
 dist/
@@ -17,8 +17,11 @@ temp/
 # ignore the config file
 .continueignore
 
-#CAs
+# CAs
 CA/
 *.pem
+
+# Ignore package-lock.json and npm packages directory
+package-lock.json
 
 # End of file
