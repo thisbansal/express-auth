@@ -22,6 +22,6 @@ CA/
 *.pem
 
 # Ignore package-lock.json and npm packages directory
-package-lock.json
+#package-lock.json
 
 # End of file

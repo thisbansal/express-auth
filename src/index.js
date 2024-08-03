@@ -1,20 +1,31 @@
-const { getCreds } = require('./config');
+const { getCredentials } = require('./config');
 const https = require('https');
 const helmet = require('helmet');
 const express = require('express');
-// const dB = require('./config/db');
+const cors = require('cors');
+const { rateLimit } = require('express-rate-limit');
+const { middlewareValidation } = require('./middleware/index');
+// const Db = require('./config/db');
+
 async function startServer() {
   try {
-    // const dotenv = require("dotenv").config().parsed;
+    const limiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+    });
+    // const dbInstance = await Db.getInstance();
     const app = express();
-    const { port, host, isHttpsEnabled, certificates } = await getCreds();
+
+    app.use(limiter);
+    app.use(cors());
+    const { port, host, isHttpsEnabled, certificates } = await getCredentials();
 
     // Middleware
     if (isHttpsEnabled) {
       app.use(helmet());
     }
     app.use(express.json());
-    app.use(require('./middleware/index'));
+    app.use(middlewareValidation);
 
     // routes
     const userRoutes = require('./routes/index');
@@ -37,6 +48,7 @@ async function startServer() {
   } catch (error) {
     console.error("Couldn't start server");
     console.debug(error);
+    return;
   }
 }
 
