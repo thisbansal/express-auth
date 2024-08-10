@@ -6,7 +6,6 @@ const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
 const { middlewareValidation } = require('./middleware/index');
 // const Db = require('./config/db');
-
 async function startServer() {
   try {
     const limiter = rateLimit({
