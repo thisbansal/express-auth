@@ -4,7 +4,8 @@ const helmet = require('helmet');
 const express = require('express');
 const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
-const { middlewareValidation } = require('./middleware/index');
+const { logAndRedirectInsecureRequest } = require('./middleware/index');
+// TODO: make use of knex and possibly pg?
 // const Db = require('./config/db');
 async function startServer() {
   try {
@@ -24,7 +25,7 @@ async function startServer() {
       app.use(helmet());
     }
     app.use(express.json());
-    app.use(middlewareValidation);
+    app.use(logAndRedirectInsecureRequest);
 
     // routes
     const userRoutes = require('./routes/index');
