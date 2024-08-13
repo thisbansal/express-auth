@@ -10,10 +10,16 @@ module.exports = {
       'string.max': 'Username should not exceed 30 characters.',
       'any.required': 'Username is required.',
     }),
-    email: Joi.string().email().required().messages({
-      'string.email': 'Please enter a valid email address.',
-      'any.required': 'Email is required.',
-    }),
+    email: Joi.string()
+      .email()
+      .pattern(new RegExp('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$'))
+      .required()
+      .messages({
+        'string.email': 'Please enter a valid email address.',
+        'string.pattern.base':
+          'Email must be in a standard format (e.g., example@domain.com).',
+        'any.required': 'Email is required.',
+      }),
     password: Joi.string()
       .min(8)
       .pattern(
