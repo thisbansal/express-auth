@@ -7,7 +7,7 @@ const validateSignUpRequest = async (req, res, next) => {
     return next();
   } catch (error) {
     console.log(error.details);
-    return res.status(500).json({ message: 'please provide correct details' });
+    return res.status(500).json({ message: error?.details[0]?.message });
   }
 };
 
