@@ -53,10 +53,9 @@ module.exports = {
         'number.integer': 'Birth year should be an integer.',
         'number.min': 'Birth year should not be before 1900.',
         'number.max': `Birth year should not be in the future.`,
-      })
-
-      .with('username', 'birth_year')
-      .with('password', 'repeat_password')
-      .xor('password', 'access_token'),
-  }),
+      }),
+  })
+    .with('username', 'birth_year')
+    .with('password', 'repeat_password')
+    .xor('password', 'access_token'),
 };
