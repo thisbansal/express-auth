@@ -2,12 +2,14 @@
 const { Router } = require('express');
 const { basicAuth } = require('../middleware/basicAuth');
 const { validateSignUpRequest } = require('../middleware/validate-sign-up');
+const Db = require('../config/db');
 const router = new Router();
 
 router.post('/sign-up', basicAuth, validateSignUpRequest, async (req, res) => {
   try {
     if (req.validatedData) {
-      console.log('processing received username and password');
+      const knex = await Db.getInstance();
+      console.log(knex);
       res
         .status(201)
         .json({ message: 'for now all requirements are met' })

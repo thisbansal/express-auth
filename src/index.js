@@ -5,15 +5,13 @@ const express = require('express');
 const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
 const { logAndRedirectInsecureRequest } = require('./middleware/index');
-// TODO: make use of knex and possibly pg?
-// const Db = require('./config/db');
+
 async function startServer() {
   try {
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
       max: 100,
     });
-    // const dbInstance = await Db.getInstance();
     const app = express();
 
     app.use(limiter);
