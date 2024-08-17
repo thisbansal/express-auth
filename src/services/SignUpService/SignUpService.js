@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const db = require('../../config/db');
 const { v4: uuid4 } = require('uuid');
 
 async function createUser({ userName, email, password }) {

@@ -1,4 +1,4 @@
-const { createUser } = require('../services/signUpService');
+const { createUser } = require('../services/SignUpService/SignUpService');
 
 async function createUserController(body) {
   try {
