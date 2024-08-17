@@ -2,18 +2,18 @@
 const { Router } = require('express');
 const { basicAuth } = require('../middleware/basicAuth');
 const { validateSignUpRequest } = require('../middleware/validate-sign-up');
-const Db = require('../config/db');
+const { createUserController } = require('../controllers/signUpController');
 const router = new Router();
 
 router.post('/sign-up', basicAuth, validateSignUpRequest, async (req, res) => {
   try {
     if (req.validatedData) {
-      const knex = await Db.getInstance();
-      console.log(knex);
-      res
-        .status(201)
-        .json({ message: 'for now all requirements are met' })
-        .send();
+      const createUser = await createUserController(req.body);
+      if (createUser)
+        res
+          .status(201)
+          .json({ message: 'for now all requirements are met' })
+          .send();
       return;
     }
 
