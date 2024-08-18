@@ -9,17 +9,18 @@ router.post('/sign-up', basicAuth, validateSignUpRequest, async (req, res) => {
   try {
     if (req.validatedData) {
       const createUser = await createUserController(req.body);
-      if (createUser)
+      if (createUser) {
         res
           .status(201)
           .json({ message: 'for now all requirements are met' })
           .send();
-      return;
+        return;
+      }
     }
-
-    res.status('401').send(`Malformed request`);
+    res.status(500).send(`Malformed request`);
   } catch (error) {
     console.log('Something went wrong. Try again later.', error);
+    res.status(500).json({ message: "Couldn't fulfill the request" });
   }
 });
 

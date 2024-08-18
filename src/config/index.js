@@ -24,4 +24,7 @@ async function getCredentials() {
   return options;
 }
 
-module.exports = { getCredentials };
+const hashLength = {
+  hashLength: 50,
+};
+module.exports = { getCredentials, hashLength };

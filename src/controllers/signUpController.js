@@ -1,17 +1,19 @@
 const { createUser } = require('../services/SignUpService/SignUpService');
 
+/**
+ *
+ * @param {Body} body accepts request body to create a user account
+ * @returns {Promise[Array]} greater than one if successful
+ * @throws {Error} Error could be thrown when creating hashed password or database insert operation
+ */
 async function createUserController(body) {
-  try {
-    return await createUser({
-      userName: body.username,
-      email: body.email,
-      password: body.password,
-    });
-  } catch (error) {
-    console.error(error);
-    return;
-  }
+  return await createUser({
+    userName: body.username,
+    email: body.email,
+    password: body.password,
+  });
 }
+
 module.exports = {
   createUserController,
 };
