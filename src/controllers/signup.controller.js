@@ -1,4 +1,6 @@
-const { createUser } = require('../services/SignUpService/SignUpService');
+const {
+  createUserService,
+} = require('../services/SignUpService/SignUpService');
 
 /**
  *
@@ -7,7 +9,7 @@ const { createUser } = require('../services/SignUpService/SignUpService');
  * @throws {Error} Error could be thrown when creating hashed password or database insert operation
  */
 async function createUserController(body) {
-  return await createUser({
+  return await createUserService({
     userName: body.username,
     email: body.email,
     password: body.password,

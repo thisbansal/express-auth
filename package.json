@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "description": "Basic auth server built with ExpressJS",
   "scripts": {
-    "dev": "nodemon --quiet src/index.js",
+    "dev": "bun --hot run src/index.js",
+    "watch": "bun --watch run src/index.js",
     "start": "node src/index.js",
     "prepare": "husky install",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "bun run eslint .",
+    "lint:fix": "bun eslint . --fix",
     "pre-commit": "lint-staged"
   },
   "keywords": [
@@ -37,7 +38,6 @@
     "husky": "^8.0.0",
     "lint-staged": "^15.2.7",
     "mkcert": "^3.2.0",
-    "nodemon": "^3.1.4",
     "prettier": "^3.3.3"
   },
   "lint-staged": {
