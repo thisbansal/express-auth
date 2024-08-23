@@ -2,7 +2,7 @@
 const { Router } = require('express');
 const { basicAuth } = require('../middleware/basicAuth');
 const { validateSignUpRequest } = require('../middleware/validate-sign-up');
-const { createUserController } = require('../controllers/SignUpController');
+const { createUserController } = require('../controllers/signup.controller');
 const router = new Router();
 
 router.post('/sign-up', basicAuth, validateSignUpRequest, async (req, res) => {

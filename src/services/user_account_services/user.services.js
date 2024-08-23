@@ -1,5 +1,5 @@
 const { v4: uuid4 } = require('uuid');
-const { hashPassword } = require('../../lib/ManagePasswords');
+const { hashPassword } = require('../../lib/manage.password');
 const { createUser } = require('../../models/user.repository');
 
 /**

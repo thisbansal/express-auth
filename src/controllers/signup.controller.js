@@ -1,6 +1,6 @@
 const {
   createUserService,
-} = require('../services/SignUpService/SignUpService');
+} = require('../services/user_account_services/user.services');
 
 /**
  *
