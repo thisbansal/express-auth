@@ -1,5 +1,6 @@
 const { getCredentials } = require('./config');
 const https = require('https');
+const http = require('http');
 const helmet = require('helmet');
 const express = require('express');
 const cors = require('cors');
@@ -13,36 +14,48 @@ async function startServer() {
       max: 100,
     });
     const app = express();
-
     app.use(limiter);
     app.use(cors());
     const { port, host, isHttpsEnabled, certificates } = await getCredentials();
 
     // Middleware
-    if (isHttpsEnabled) {
-      app.use(helmet());
-    }
+    app.use(helmet());
     app.use(express.json());
     app.use(logAndRedirectInsecureRequest);
 
     // routes
     const userRoutes = require('./routes/index');
     app.use('/', userRoutes);
-
-    // Start the server
-    const httpsServer = https.createServer(
-      (certificates.ca, certificates.cert),
-      app
-    );
-    const protocol =
-      httpsServer instanceof require('https').Server ? 'https' : 'http';
-    httpsServer.listen(port, host, () => {
-      const secureServerAddress = httpsServer.address().address;
-      const secureServerPort = httpsServer.address().port;
-      console.log(
-        `⚡️Server is running on ${protocol}://${secureServerAddress}:${secureServerPort} ⚡️`
-      );
-    });
+    if (isHttpsEnabled) {
+      // Start the SSL server
+      const httpsServer = https.createServer({
+        key: certificates.ca,
+        cert: certificates.cert,
+      });
+      const protocol = 'https';
+      httpsServer.listen(port, host, () => {
+        const secureServerAddress = httpsServer.address().address;
+        const secureServerPort = httpsServer.address().port;
+        console.log(
+          `⚡️Server is running on ${protocol}://${secureServerAddress === '::1' ? 'localhost' : secureServerAddress}:${secureServerPort} ⚡️`
+        );
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        const server = http.createServer(app);
+        server
+          .listen(port, host, () => {
+            const protocol = 'http';
+            console.log(
+              `⚡️Server is running on ${protocol}://${server.address().address === '::1' ? 'localhost' : server.address().address}:${server.address().port} ⚡️`
+            );
+            resolve();
+          })
+          .on('error', (err) => {
+            reject(err);
+          });
+      });
+    }
   } catch (error) {
     console.error("Couldn't start server");
     console.debug(error);

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const generateCAKeys = require('../utils/CA');
+const fetchCAKey = require('../utils/CA');
 
 async function getCredentials() {
   const options = {
@@ -9,7 +9,9 @@ async function getCredentials() {
   };
 
   try {
-    const { ca, cert } = await generateCAKeys();
+    const fetchedKeys = await fetchCAKey();
+    const ca = fetchedKeys?.ca;
+    const cert = fetchedKeys?.cert;
     if (ca && cert) {
       options.isHttpsEnabled = true;
       options.certificates = {
@@ -17,8 +19,10 @@ async function getCredentials() {
         cert: cert,
       };
     }
+    return options;
   } catch (error) {
     console.error('config error', error);
+    console.log('Relying on Nginx for TLS/SSL...');
   }
 
   return options;

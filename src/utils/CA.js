@@ -1,20 +1,16 @@
-const { createCA, createCert } = require('mkcert');
+const fs = require('fs/promises');
 
-async function generateCAKeys() {
-  const ca = await createCA({
-    organization: 'Swifty',
-    countryCode: 'IM',
-    state: 'Heaven',
-    locality: 'Swizz',
-    validity: 365,
-  });
-
-  const cert = await createCert({
-    ca: { key: ca.key, cert: ca.cert },
-    domains: ['127.0.0.1', 'localhost', '0.0.0.0'],
-    validity: 365,
-  });
-  return { ca, cert };
+async function fetchCAKeys() {
+  let ca;
+  try {
+    const caKey = await fs.readFile('./CA/localhost-key.pem');
+    const caCert = await fs.readFile('./CA/localhost.pem');
+    ca = { ca: caKey, cert: caCert };
+  } catch {
+    console.log("💥 Couldn't find workable Certificate and key for SSL");
+    ca = null;
+  }
+  return ca;
 }
 
-module.exports = generateCAKeys;
+module.exports = fetchCAKeys;

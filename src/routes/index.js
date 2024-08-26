@@ -24,4 +24,17 @@ router.post('/sign-up', basicAuth, validateSignUpRequest, async (req, res) => {
   }
 });
 
+router.get('/', basicAuth, async (req, res) => {
+  try {
+    if (req) {
+      res.status(200).json({ message: '👋🏽 user' });
+    } else {
+      res.status(500).json({ message: 'malformed request' });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'malformed request' });
+  }
+});
+
 module.exports = router;
