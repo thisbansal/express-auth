@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "description": "Basic auth server built with ExpressJS",
   "scripts": {
-    "dev": "bun --hot run src/index.js",
-    "watch": "bun --watch run src/index.js",
-    "start": "node src/index.js",
+    "dev": "bun --watch run src/index.js",
+    "start": "bun --watch src/index.js",
     "prepare": "husky install",
     "lint": "bun run eslint .",
     "lint:fix": "bun eslint . --fix",
