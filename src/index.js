@@ -47,7 +47,7 @@ async function startServer() {
           .listen(port, host, () => {
             const protocol = 'http';
             console.log(
-              `⚡️Server is running on ${protocol}://${server.address().address === '::1' ? 'localhost' : server.address().address}:${server.address().port} ⚡️`
+              `🐼 Server is running on ${protocol}://${server.address().address === '::1' ? 'localhost' : server.address().address}:${server.address().port} ⚡️`
             );
             resolve();
           })

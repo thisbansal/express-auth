@@ -1,6 +1,6 @@
 const Db = require('../config/db');
 const { UserTables } = require('../constants');
-const dbOperation = Db.getInstance();
+const dbOperation = Db.getInstance;
 
 const createUser = async ({ uuid, userName, email, hashedPassword }) => {
   const result = await dbOperation(UserTables.CREDENTIALS).insert({

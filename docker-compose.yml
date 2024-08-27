@@ -1,0 +1,10 @@
+services:
+  auth-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /Users/thisbansal/Developer/Projects/auth-server/:/app
+    ports:
+      - 3300:3300
+    command: bun dev sleep infinity
