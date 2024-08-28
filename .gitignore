@@ -24,4 +24,6 @@ CA/
 # Ignore package-lock.json and npm packages directory
 #package-lock.json
 
+.tap
+
 # End of file
