@@ -24,4 +24,16 @@ router.post('/sign-up', basicAuth, validateSignUpRequest, async (req, res) => {
   }
 });
 
+router.get('/', basicAuth, async (req, res) => {
+  try {
+    res.status(200).json({ message: 'success' }).send();
+  } catch (error) {
+    console.log('Something went wrong. Try again later.', error);
+    return res
+      .status(500)
+      .json({ message: "Couldn't fulfill the request" })
+      .send();
+  }
+});
+
 module.exports = router;
