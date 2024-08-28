@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const { rateLimit } = require('express-rate-limit');
 const { logAndRedirectInsecureRequest } = require('./middleware/index');
+const { getHost } = require('./utils/ipaddress');
 
 async function startServer() {
   try {
@@ -40,7 +41,7 @@ async function startServer() {
       const secureServerAddress = httpsServer.address().address;
       const secureServerPort = httpsServer.address().port;
       console.log(
-        `⚡️Server is running on ${protocol}://${secureServerAddress}:${secureServerPort} ⚡️`
+        `⚡️Server is running on ${protocol}://${getHost(secureServerAddress)}:${secureServerPort} ⚡️`
       );
     });
   } catch (error) {
