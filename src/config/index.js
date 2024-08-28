@@ -1,10 +1,10 @@
-require("dotenv").config();
-const generateCAKeys = require("../utils/CA");
+require('dotenv').config();
+const generateCAKeys = require('../utils/CA');
 
-async function getCreds() {
+async function getCredentials() {
   const options = {
     port: process.env.PORT_NUMBER || 3001,
-    host: process.env.HOST || "localhost",
+    host: process.env.HOST || 'localhost',
     isHttpsEnabled: false,
   };
 
@@ -18,10 +18,13 @@ async function getCreds() {
       };
     }
   } catch (error) {
-    console.error("config error", error);
+    console.error('config error', error);
   }
 
   return options;
 }
 
-module.exports = { getCreds };
+const hashLength = {
+  hashLength: 50,
+};
+module.exports = { getCredentials, hashLength };

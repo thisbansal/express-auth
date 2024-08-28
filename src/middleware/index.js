@@ -1,10 +1,14 @@
-const defaultConfig = require("../constants");
-module.exports = (req, res, next) => {
+const defaultConfig = require('../constants');
+// const { ValidationError } = require('joi');
+
+function logAndRedirectInsecureRequest(req, res, next) {
   console.log(
     `${new Date().toISOString()} - ${req.method} request to ${
       req.url
     } using secure protocol ${req.secure}`
   );
+
+  // if request is not secure then redirect to https
   if (!req.secure) {
     console.log(
       `redirecting to secure protocol https | https://${
@@ -18,5 +22,9 @@ module.exports = (req, res, next) => {
       }${req.url}`
     );
   }
+
+  // validate request before proceeding
   next();
-};
+}
+
+module.exports = { logAndRedirectInsecureRequest };

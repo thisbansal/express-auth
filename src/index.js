@@ -1,25 +1,33 @@
-const { getCreds } = require("./config");
-const https = require("https");
-const helmet = require("helmet");
-const express = require("express");
-const dB = require('./config/db');
-// const dotenv = require("dotenv").config();
+const { getCredentials } = require('./config');
+const https = require('https');
+const helmet = require('helmet');
+const express = require('express');
+const cors = require('cors');
+const { rateLimit } = require('express-rate-limit');
+const { logAndRedirectInsecureRequest } = require('./middleware/index');
 
 async function startServer() {
   try {
+    const limiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+    });
     const app = express();
-    const { port, host, isHttpsEnabled, certificates } = await getCreds();
-    
+
+    app.use(limiter);
+    app.use(cors());
+    const { port, host, isHttpsEnabled, certificates } = await getCredentials();
+
     // Middleware
     if (isHttpsEnabled) {
       app.use(helmet());
     }
     app.use(express.json());
-    app.use(require("./middleware/index"));
+    app.use(logAndRedirectInsecureRequest);
 
     // routes
-    const userRoutes = require("./routes/index");
-    app.use("/", userRoutes);
+    const userRoutes = require('./routes/index');
+    app.use('/', userRoutes);
 
     // Start the server
     const httpsServer = https.createServer(
@@ -27,7 +35,7 @@ async function startServer() {
       app
     );
     const protocol =
-      httpsServer instanceof require("https").Server ? "https" : "http";
+      httpsServer instanceof require('https').Server ? 'https' : 'http';
     httpsServer.listen(port, host, () => {
       const secureServerAddress = httpsServer.address().address;
       const secureServerPort = httpsServer.address().port;
@@ -38,6 +46,7 @@ async function startServer() {
   } catch (error) {
     console.error("Couldn't start server");
     console.debug(error);
+    return;
   }
 }
 

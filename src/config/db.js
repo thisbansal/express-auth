@@ -1,45 +1,67 @@
 require('dotenv').config();
-const { Pool } = require('pg');
-const databaseName = process.env.DB_NAME;
-const userName = process.env.DB_USER;
-const userPassword = process.env.DB_PASSWORD;
-const host = process.env.DB_HOST;
-const port = process.env.DB_PORT;
+const knex = require('knex');
+const databaseClient = { pg: 'pg' };
 
-class Db {
-  constructor() {
-    if (Db.instance) return Db.instance;
-    this.connection = null;
-    Db.instance = this;
+const getConfig = (dbClient) => {
+  const databaseName = process.env.DB_NAME;
+  const userName = process.env.DB_USER;
+  const userPassword = process.env.DB_PASSWORD;
+  const host = process.env.DB_HOST;
+  const port = process.env.DB_PORT;
+  const client = databaseClient[dbClient];
+
+  if (!databaseName) throw new Error('databaseName not found');
+  if (!userName) throw new Error('userName not found');
+  if (!userPassword) throw new Error('userPassword not found');
+  if (!host) throw new Error('database address not found');
+  if (!port) throw new Error('database port number not found');
+  if (!client) throw new Error('database client not provided');
+
+  return {
+    databaseName,
+    userName,
+    userPassword,
+    host,
+    port,
+    client,
+  };
+};
+
+const createKnexHandler = (config) => {
+  return knex({
+    client: config.client,
+    connection: {
+      user: config.userName,
+      host: config.host,
+      database: config.databaseName,
+      password: config.userPassword,
+      port: config.port,
+    },
+  });
+};
+
+const returnDbInstance = async () => {
+  try {
+    const config = getConfig(databaseClient.pg);
+    const knexInstance = createKnexHandler(config);
+    return await knexInstance;
+  } catch (error) {
+    console.error('Failed to create database instance');
+    throw error;
   }
+};
 
-  async connect() {
-    try {
-        const pool = new Pool({
-          user: userName,
-          host: host,
-          database: databaseName,
-          password: userPassword,
-          port:port
-      });
-      await pool.connect();
-      this.connection = pool;
-    } catch (err) {
-      throw err;
+const Db = (() => {
+  let instance;
+
+  const getInstance = async () => {
+    if (!instance) {
+      instance = await returnDbInstance();
     }
-  }
+    return instance;
+  };
 
-  getConnection() {
-    return this.connection;
-  }
-
-  static async getInstance() {
-    if (!Db.instance) {
-      Db.instance = new Db();
-      await Db.instance.connect();
-    }
-    return Db.instance;
-  }
-}
+  return { getInstance };
+})();
 
 module.exports = Db;
