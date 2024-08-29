@@ -1,18 +1,21 @@
 const Db = require('../config/db');
-const { UserTables } = require('../constants');
-const dbOperation = Db.getInstance();
+const { UserTables, SERVER_EXIT_CODE } = require('../constants');
 
 const createUser = async ({ uuid, userName, email, hashedPassword }) => {
-  const result = await dbOperation(UserTables.CREDENTIALS).insert({
+  const User = await Db.getInstance();
+  const result = await User(UserTables.CREDENTIALS).insert({
     user_id: uuid,
     username: userName,
     email: email,
-    password_hard: hashedPassword,
+    password_hash: hashedPassword,
   });
-  return result;
+  return result?.rowCount > 0
+    ? SERVER_EXIT_CODE.SUCCESSFUL_EXIT
+    : SERVER_EXIT_CODE.FAILED_EXIT;
 };
 
 const updateUserName = async ({ oldUserName, newUserName }) => {
+  const dbOperation = await Db.getInstance();
   const result = await dbOperation(UserTables.CREDENTIALS)
     .where({ username: oldUserName })
     .update({ userName: newUserName });
@@ -20,6 +23,7 @@ const updateUserName = async ({ oldUserName, newUserName }) => {
 };
 
 const deleteUser = async ({ uuid }) => {
+  const dbOperation = await Db.getInstance();
   const result = await dbOperation(UserTables.CREDENTIALS)
     .where({
       user_id: uuid,

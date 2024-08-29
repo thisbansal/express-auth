@@ -13,4 +13,14 @@ const IPAddressMapping = [
   { ip: 'localhost', value: 'localhost' },
 ];
 
-module.exports = { defaultConfig, UserTables, IPAddressMapping };
+const SERVER_EXIT_CODE = {
+  SUCCESSFUL_EXIT: 0,
+  FAILED_EXIT: -1,
+};
+
+module.exports = {
+  defaultConfig,
+  UserTables,
+  IPAddressMapping,
+  SERVER_EXIT_CODE,
+};
