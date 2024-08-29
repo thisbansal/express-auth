@@ -1,7 +1,6 @@
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-
-const SECRET_KEY = '8cbdda80-6d1b-44d7-8cac-3a0257d72707';
+const SECRET_KEY = process.env.JWT_ACCESS_REFRESH_TOKEN;
 
 const generateToken = (userId, accessTokenDuration, refreshTokenDuration) => {
   if (!validator.isUUID(userId)) {
