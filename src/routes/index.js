@@ -3,13 +3,14 @@ const { Router } = require('express');
 const { basicAuth } = require('../middleware/basicAuth');
 const { validateSignUpRequest } = require('../middleware/validate-sign-up');
 const { createUserController } = require('../controllers/signup.controller');
+const { SERVER_EXIT_CODE } = require('../constants');
 const router = new Router();
 
 router.post('/sign-up', basicAuth, validateSignUpRequest, async (req, res) => {
   try {
     if (req.validatedData) {
       const createUser = await createUserController(req.body);
-      if (createUser) {
+      if (createUser === SERVER_EXIT_CODE.SUCCESSFUL_EXIT) {
         res
           .status(201)
           .json({ message: 'for now all requirements are met' })
