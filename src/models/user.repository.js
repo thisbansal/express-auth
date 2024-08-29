@@ -1,9 +1,10 @@
 const Db = require('../config/db');
-const { UserTables, SERVER_EXIT_CODE } = require('../constants');
+const { USER_TABLES } = require('../constants/user.constants');
+const { SERVER_EXIT_CODE } = require('../constants/index');
 
 const createUser = async ({ uuid, userName, email, hashedPassword }) => {
   const User = await Db.getInstance();
-  const result = await User(UserTables.CREDENTIALS).insert({
+  const result = await User(USER_TABLES.CREDENTIALS).insert({
     user_id: uuid,
     username: userName,
     email: email,
@@ -16,7 +17,7 @@ const createUser = async ({ uuid, userName, email, hashedPassword }) => {
 
 const updateUserName = async ({ oldUserName, newUserName }) => {
   const dbOperation = await Db.getInstance();
-  const result = await dbOperation(UserTables.CREDENTIALS)
+  const result = await dbOperation(USER_TABLES.CREDENTIALS)
     .where({ username: oldUserName })
     .update({ userName: newUserName });
   return result;
@@ -24,7 +25,7 @@ const updateUserName = async ({ oldUserName, newUserName }) => {
 
 const deleteUser = async ({ uuid }) => {
   const dbOperation = await Db.getInstance();
-  const result = await dbOperation(UserTables.CREDENTIALS)
+  const result = await dbOperation(USER_TABLES.CREDENTIALS)
     .where({
       user_id: uuid,
     })
