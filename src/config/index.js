@@ -1,8 +1,31 @@
-// Load environment variables from.env file
-require("dotenv").config();
+require('dotenv').config();
+const generateCAKeys = require('../utils/CA');
 
-// default port number if not set in.env
-const port = process.env.PORT_NUMBER || 3001;
-const host = process.env.HOST || "localhost";
+async function getCredentials() {
+  const options = {
+    port: process.env.PORT_NUMBER || 3001,
+    host: process.env.HOST || 'localhost',
+    isHttpsEnabled: false,
+  };
 
-module.exports = { port, host };
+  try {
+    const { ca, cert } = await generateCAKeys();
+    if (ca && cert) {
+      options.isHttpsEnabled = true;
+      options.certificates = {
+        ca: ca,
+        cert: cert,
+      };
+    }
+  } catch (error) {
+    console.error('config error', error);
+  }
+
+  return options;
+}
+
+const hashLength = {
+  hashLength: 50,
+};
+
+module.exports = { getCredentials, hashLength };

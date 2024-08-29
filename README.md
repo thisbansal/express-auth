@@ -18,10 +18,10 @@ This is a basic authentication server built using ExpressJS. It allows you to se
 
 1. Clone the repository:
 
-`bash git clone https://github.com/yourusername/auth-server.git`
+`git clone https://github.com/thisbansal/express-auth.git`
 
 2. Navigate to the project directory:
-   `cd auth-server`
+   `cd express-auth`
 
 3. Install dependencies:
    `npm install`

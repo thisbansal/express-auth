@@ -1,19 +1,54 @@
-// Create a new express app
-const express = require("express");
-const app = express();
-const { port, host } = require("./config");
+const { getCredentials } = require('./config');
+const https = require('https');
+const helmet = require('helmet');
+const express = require('express');
+const cors = require('cors');
+const { rateLimit } = require('express-rate-limit');
+const { logAndRedirectInsecureRequest } = require('./middleware/index');
+const { getHost } = require('./utils/ipaddress');
 
-// Middleware to parse JSON bodies (for incoming requests)
-app.use(express.json());
+async function startServer() {
+  try {
+    const limiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+    });
+    const app = express();
 
-// Use the logger middleware
-app.use(require("./middleware/index"));
+    app.use(limiter);
+    app.use(cors());
+    const { port, host, isHttpsEnabled, certificates } = await getCredentials();
 
-// Import and use routes
-const userRoutes = require("./routes/index");
-app.use("/", userRoutes);
+    // Middleware
+    if (isHttpsEnabled) {
+      app.use(helmet());
+    }
+    app.use(express.json());
+    app.use(logAndRedirectInsecureRequest);
 
-// Start the server
-app.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`);
-});
+    // routes
+    const userRoutes = require('./routes/index');
+    app.use('/', userRoutes);
+
+    // Start the server
+    const httpsServer = https.createServer(
+      (certificates.ca, certificates.cert),
+      app
+    );
+    const protocol =
+      httpsServer instanceof require('https').Server ? 'https' : 'http';
+    httpsServer.listen(port, host, () => {
+      const secureServerAddress = httpsServer.address().address;
+      const secureServerPort = httpsServer.address().port;
+      console.log(
+        `⚡️Server is running on ${protocol}://${getHost(secureServerAddress)}:${secureServerPort} ⚡️`
+      );
+    });
+  } catch (error) {
+    console.error("Couldn't start server");
+    console.debug(error);
+    return;
+  }
+}
+
+startServer();
