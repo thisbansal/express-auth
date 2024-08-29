@@ -3,10 +3,6 @@ const defaultConfig = {
   HOST: 'localhost',
 };
 
-const UserTables = {
-  CREDENTIALS: 'my_app_users_credentials',
-};
-
 const IPAddressMapping = [
   { ip: '::1', value: 'localhost' },
   { ip: '127.0.0.1', value: 'localhost' },
@@ -20,7 +16,6 @@ const SERVER_EXIT_CODE = {
 
 module.exports = {
   defaultConfig,
-  UserTables,
   IPAddressMapping,
   SERVER_EXIT_CODE,
 };
