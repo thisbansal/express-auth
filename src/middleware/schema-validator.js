@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { USER_REQUIRED_FIELDS } = require('../constants/user.constants');
 
 module.exports = {
   signUpSchema: Joi.object({
@@ -44,18 +45,9 @@ module.exports = {
     access_token: Joi.alternatives().try(Joi.string(), Joi.number()).messages({
       'alternatives.types': 'Access token must be either a string or a number.',
     }),
-    birth_year: Joi.number()
-      .integer()
-      .min(1900)
-      .max(new Date().getFullYear())
-      .messages({
-        'number.base': 'Birth year should be a number.',
-        'number.integer': 'Birth year should be an integer.',
-        'number.min': 'Birth year should not be before 1900.',
-        'number.max': `Birth year should not be in the future.`,
-      }),
+    dob: Joi.date().greater(USER_REQUIRED_FIELDS.dob.minDate),
   })
-    .with('username', 'birth_year')
+    .with('username', 'dob')
     .with('password', 'repeat_password')
     .xor('password', 'access_token'),
 };

@@ -27,4 +27,5 @@ async function getCredentials() {
 const hashLength = {
   hashLength: 50,
 };
+
 module.exports = { getCredentials, hashLength };

@@ -11,7 +11,7 @@ const { createUser } = require('../../models/user.repository');
 async function createUserService({ userName, email, password }) {
   const uuid = uuid4();
   const hashedPassword = await hashPassword(password);
-  createUser({ uuid, userName, email, hashedPassword });
+  return createUser({ uuid, userName, email, hashedPassword });
 }
 
 module.exports = {
