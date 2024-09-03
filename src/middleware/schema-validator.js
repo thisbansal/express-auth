@@ -46,8 +46,19 @@ module.exports = {
       'alternatives.types': 'Access token must be either a string or a number.',
     }),
     dob: Joi.date().greater(USER_REQUIRED_FIELDS.dob.minDate),
+    first_name: Joi.string()
+      .min(2)
+      .max(25)
+      .required()
+      .pattern(new RegExp('^[a-zA-Z]+$')),
+    last_name: Joi.string()
+      .min(2)
+      .max(25)
+      .required()
+      .pattern(new RegExp('^[a-zA-Z]+$')),
   })
     .with('username', 'dob')
+    .with('first_name', 'last_name')
     .with('password', 'repeat_password')
     .xor('password', 'access_token'),
 };
